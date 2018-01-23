@@ -1,0 +1,10 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    script(src="/vendors.js")
+    each href in css
+      link(href= href)(rel="stylesheet")
+  body
+    div(id="root")!=JSON.parse(domRender)
+  script(src= script)
