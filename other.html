@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+图片：<input type="file" id="PictureUrl" name="image"/>
+<div id="imgContainer"></div>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script>
+  $(document).on('change', '#PictureUrl', function () { //PictureUrl为input file 的id
+    //console.log(this.files[0]);
+    function getObjectURL(file) {
+      var url = null;
+      if (window.createObjcectURL != undefined) {
+        url = window.createOjcectURL(file);
+      } else if (window.URL != undefined) {
+        url = window.URL.createObjectURL(file);
+      } else if (window.webkitURL != undefined) {
+        url = window.webkitURL.createObjectURL(file);
+      }
+      return url;
+    }
+    var objURL = getObjectURL(this.files[0]);//这里的objURL就是input file的真实路径
+    $('#imgContainer').html("<img src='" + objURL + "' alt='Alternate Text' width='640px' height='350px' id='target' />");
+
+
+
+    //cutImg();//自定义的裁剪图片函数
+  });
+</script>
+</body>
+</html>

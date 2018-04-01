@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div class="main">
+  用户名：<input type="text" id="username" name="username"/>
+  密码：<input type="password" id="psw" name="psw"/>
+  图片：<input type="file" id="image" name="image"/>
+  <div class="button">
+    <button class="btn btn-primary">登陆</button>
+    <button class="btn btn-primary" onclick="register()">注册</button>
+  </div>
+</div>
+<form action="http://localhost:8080/upload" method="POST" enctype="multipart/form-data">
+  <p><input type="file" name="uploadImg"></p>
+  <p><input type="submit" value="提交"></p>
+</form>
+<script>
+
+  function getPath(obj) {
+    if(obj)
+    {
+      if (window.navigator.userAgent.indexOf("MSIE")>=1)
+      {
+        obj.select();
+        return document.selection.createRange().text;
+      }
+      else if(window.navigator.userAgent.indexOf("Firefox")>=1)
+      {
+        if(obj.files)
+        {
+          return obj.files.item(0).getAsDataURL();
+        }
+        return obj.value;
+      }
+      return obj.value;
+    }
+  }
+  const image = document.getElementById('image');
+
+  image.addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    var filePath = getPath(e.target);
+    console.log(filePath);
+  }, false);
+
+
+  function register() {
+    const username = document.getElementById('username').value;
+    const psw = document.getElementById('psw').value;
+    const image = document.getElementById('image').value;
+
+    let formData = new FormData();
+    formData.append('username', username);
+    formData.append('psw', psw);
+    formData.append('image', image);
+    console.log(formData, image);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+          console.log(xhr.responseText);
+        } else {
+          console.log("Response was unsuccessful:" + xhr.status);
+        }
+      }
+    };
+
+    xhr.open("post", "http://localhost:8080/upload", true);
+    xhr.send(formData);
+  }
+</script>
+</body>
+</html>

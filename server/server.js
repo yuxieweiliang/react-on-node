@@ -10,8 +10,9 @@ const router = new Router();
 const PORT = process.env.PORT || 8081;
 
 // 静态文件
-app.use(staticServe(path.resolve(path.normalize(__dirname + '/../build/'))/*, { extensions: ['js', 'css']}*/));
+app.use(staticServe(path.resolve(path.normalize(process.cwd() + '/build/'))/*, { extensions: ['js', 'css']}*/));
 
+console.log(path.resolve(path.normalize(process.cwd() + '/build/')));
 //  F:\01_development\00_project\01_webpack-koa\build
 
 // 编译

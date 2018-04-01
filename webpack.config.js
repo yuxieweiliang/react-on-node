@@ -4,13 +4,14 @@ const publicPath =path.resolve(__dirname, './build');
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // 清理
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
+
 module.exports = {
-  context: path.resolve('./app'),
+  // context: path.resolve('./app'),
   // devtool: 'eval-source-map',
   entry: {
-    index: './main.js',
-    book: './book.js',
-    other: './other.js',
+    index: './app/main.js',
+    book: './app/book.js',
+    other: './app/other.js',
     vendors: ['react', 'react-dom']
   },
   output: {

@@ -1,74 +1,38 @@
-const Koa = require('koa');
-const path = require('path');
-const views = require('koa-views');
-const Router = require('koa-router');
-const webpack = require('webpack');
-// const convert = require('koa-convert');
-const staticServe = require('koa-static');
-const koaWebpackMiddleware = require('koa-webpack-middleware');
-const webpackDevMiddleware = koaWebpackMiddleware.devMiddleware;
-const webpackHotMiddleware = koaWebpackMiddleware.hotMiddleware;
-const config = require('./webpack.config');
-const app = new Koa();
-const compiler = webpack(config);
-const PORT = process.env.PORT || 8081;
-const router = new Router();
+var multiparty = require('multiparty');
+var http = require('http');
+var fs = require('fs');
+var util = require('util');
 
-// 定义静态文件
-// app.use(staticServe(path.resolve(path.normalize(__dirname + './build'))/*, { extensions: ['js', 'css']}*/));
-// app.use(staticServe(path.resolve(path.normalize(__dirname + './views'))/*, { extensions: ['js', 'css']}*/));
-// 定义模板
+http.createServer(function(req, res) {
+  if (req.url === '/upload' && req.method === 'POST') {
+    // parse a file upload
+    var form = new multiparty.Form();
 
-app.use(views(path.join(__dirname, './views'), {
-  extension: 'html'
-}));
+    console.log(req.headers);
+    form.parse(req, function(err, fields, files) {
 
+     /* var types       = fields.image[0].split('.');
+      var date        = new Date();
+      var ms          = Date.parse(date);
 
-app.use(async (ctx, next) => {
-  const start = new Date();
-  await next();
-  const ms = new Date() - start;
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
-});
-// response
-/*app.use(async(ctx, next ) => {
-  console.log('::::', ctx.url);
-  var aa = await
+      fs.renameSync(fields.upload.path,"/tmp/files"+ ms +"."+String(types[types.length-1]));*/
 
-  // console.log(aa)
-});*/
-/*const wdm = webpackDevMiddleware(compiler, {
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: true
-  },
-  reload: true,
-  publicPath: config.output.publicPath,
-  stats: {
-    colors: true
+      res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received upload:\n\n');
+
+      res.end(util.inspect({fields: fields, files: files}));
+    });
+
+    return;
   }
-});*/
 
-// app.use(convert(wdm));
-// app.use(webpackHotMiddleware(compiler));
-
-app.use(router.routes());
-router.get('/', async function(ctx) {
-  //  ctx.response.type = 'html';
-  // ctx.response.body = '<a href="/">Index Page</a>';
-  // console.log('---------------a-', ctx);
-  await ctx.render('index', {
-    abc: 'fda'
-  })
-  // ctx.body = 'Hello Koa2.0!';
-
-});
-
-
-
-app.listen(PORT, (err) => {
-  if (err) {
-    console.error(err);
-  } else
-  console.log(`HMR Listening at http://localhost:${PORT}`)
-});
+  // show a file upload form
+  res.writeHead(200, {'content-type': 'text/html'});
+  res.end(
+    '<form action="/upload" enctype="multipart/form-data" method="post">'+
+    '<input type="text" name="title"><br>'+
+    '<input type="file" name="upload" multiple="multiple"><br>'+
+    '<input type="submit" value="Upload">'+
+    '</form>'
+  );
+}).listen(8080);

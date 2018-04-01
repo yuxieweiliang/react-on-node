@@ -12,7 +12,7 @@ export default function(app) {
       poll: true
     },
     reload: true,
-    publicPath: config.output.path,
+    publicPath: '/',
     // lazy: true,
     // custom headers
     // headers: { "X-Custom-Header": "yes" },
@@ -21,11 +21,11 @@ export default function(app) {
     }
   });
 
-  app.use(hotMiddleware(compiler/*, {
+  app.use(hotMiddleware(compiler, {
     log: console.log,
     path: '/__webpack_hmr',
     heartbeat: 10 * 1000
-  }*/));
+  }));
 
 
 }
